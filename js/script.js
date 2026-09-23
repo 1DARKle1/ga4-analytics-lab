@@ -10,4 +10,29 @@ if (form) {
     form.reset();
   });
 }
+document.querySelectorAll('nav a').forEach((link) => {
+  link.addEventListener('click', () => {
+    gtag('event', 'nav_click', {
+      link_text: link.textContent.trim(),
+      from_page: document.title
+    });
+  });
+});
+let readCounted = false;
+setTimeout(() => {
+  if (readCounted || document.hidden) return;
+  readCounted = true;
+  gtag('event', 'read_30s', {
+    page_path: window.location.pathname
+  });
+}, 30000);
+const leadFormFields = document.querySelector('#lead-form');
+if (leadFormFields) {
+  leadFormFields.addEventListener('invalid', (event) => {
+    gtag('event', 'form_error', {
+      field_name: event.target.name || 'unknown',
+      form_id: 'lead-form'
+    });
+  }, true);
+}
 
